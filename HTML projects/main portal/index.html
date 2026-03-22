@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name= description content="This website provides links to HW's websites. ">
+    <title>HW's PORTAL v2.0</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* 기존 스타일 유지 및 추가 */
+        .status-emblem {
+            width: 100px;
+            height: auto;
+            margin-bottom: 15px;
+            display: block;
+            opacity: 1;
+            filter: drop-shadow(0 0 5px rgba(0,0,0,0.1));
+        }
+
+        body.dark-mode .status-emblem {
+            opacity: 1;
+            filter: brightness(1.1);
+        }
+
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.5);
+            --text-main: #2b2d42;
+            --text-sub: #8d99ae;
+            --shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+            --card-hover: translateY(-5px);
+            --status-ok: #00b894;
+        }
+
+        body.dark-mode {
+            --bg-gradient: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            --glass-bg: rgba(30, 30, 30, 0.6);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --text-main: #edf2f4;
+            --text-sub: #a8dadc;
+            --shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            --primary-color: #4cc9f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: 'Pretendard', 'Apple SD Gothic Neo', sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-gradient);
+            background-attachment: fixed;
+            color: var(--text-main);
+            min-height: 100vh;
+            transition: color 0.3s ease;
+        }
+
+        .wrapper {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 25px;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .glass-panel {
+            background: var(--glass-bg);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        aside {
+            display: flex;
+            flex-direction: column;
+            padding: 25px;
+            height: calc(100vh - 40px);
+        }
+
+        .brand {
+            font-size: 24px;
+            font-weight: 900;
+            color: var(--primary-color);
+            margin-bottom: 40px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            letter-spacing: -0.5px;
+        }
+
+        nav h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: var(--text-sub);
+            margin-bottom: 15px;
+            letter-spacing: 1px;
+        }
+
+        .nav-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 30px 0;
+            overflow-y: auto;
+            flex-grow: 1;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+            color: var(--text-main);
+            text-decoration: none;
+        }
+
+        .nav-item:hover { background: rgba(67, 97, 238, 0.1); color: var(--primary-color); }
+        .nav-item i { width: 25px; text-align: center; margin-right: 10px; opacity: 0.7; }
+
+        .system-status {
+            margin-top: auto;
+            padding-top: 20px;
+            border-top: 1px solid var(--glass-border);
+        }
+        
+        .clock { font-size: 28px; font-weight: 300; letter-spacing: -1px; margin-bottom: 5px; }
+        .date { font-size: 13px; color: var(--text-sub); }
+
+        main {
+            display: flex;
+            flex-direction: column;
+            height: calc(100vh - 40px);
+            overflow: hidden;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 25px;
+            margin-bottom: 25px;
+            height: 70px;
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-container input {
+            width: 100%;
+            padding: 12px 20px 12px 45px;
+            border-radius: 50px;
+            border: 1px solid var(--glass-border);
+            background: rgba(255,255,255,0.2);
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s;
+        }
+        
+        .search-container input:focus {
+            background: rgba(255,255,255,0.8);
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+
+        .search-container i {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-sub);
+        }
+
+        .header-actions button {
+            background: none;
+            border: none;
+            font-size: 18px;
+            color: var(--text-main);
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+        .header-actions button:hover { background: rgba(0,0,0,0.05); }
+
+        .content-area {
+            flex-grow: 1;
+            overflow-y: auto;
+            padding: 0 5px 20px 5px;
+        }
+        
+        .content-area::-webkit-scrollbar { width: 6px; }
+        .content-area::-webkit-scrollbar-thumb { background: rgba(0,0,0,0.1); border-radius: 3px; }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .section-title::before { content: ''; width: 6px; height: 6px; background: var(--primary-color); border-radius: 50%; }
+
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background: rgba(255,255,255,0.5);
+            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            padding: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            overflow: hidden;
+        }
+
+        body.dark-mode .card { background: rgba(40,40,40,0.4); }
+
+        .card:hover {
+            transform: translateY(-5px);
+            background: var(--glass-bg);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            border-color: var(--primary-color);
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            flex-shrink: 0;
+        }
+
+        .card-info { flex-grow: 1; overflow: hidden; }
+        .card-name { font-size: 16px; font-weight: 700; margin: 0 0 5px 0; color: var(--text-main); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .card-desc { font-size: 12px; color: var(--text-sub); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .card-status {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            width: 8px;
+            height: 8px;
+            background: var(--status-ok);
+            border-radius: 50%;
+            box-shadow: 0 0 8px var(--status-ok);
+        }
+
+        .star-action {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            color: #ddd;
+            font-size: 14px;
+            opacity: 0;
+            transition: 0.2s;
+        }
+        
+        .card:hover .star-action { opacity: 1; }
+        .star-action.active { color: #f1c40f; opacity: 1; }
+
+        /* 설정 모달 */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(5px);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background: var(--glass-bg);
+            padding: 30px;
+            border-radius: 16px;
+            width: 400px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--glass-border);
+        }
+
+        .setting-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        /* 언어 선택 버튼 스타일 */
+        .lang-btn-group {
+            display: flex;
+            gap: 5px;
+            background: rgba(0,0,0,0.05);
+            padding: 4px;
+            border-radius: 8px;
+        }
+        .lang-btn {
+            border: none;
+            background: none;
+            padding: 5px 10px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: bold;
+            color: var(--text-sub);
+            transition: 0.2s;
+        }
+        .lang-btn.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .switch { position: relative; display: inline-block; width: 50px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--primary-color); }
+        input:checked + .slider:before { transform: translateX(26px); }
+
+        .btn-danger {
+            width: 100%;
+            padding: 10px;
+            background: #ff6b6b;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        .btn-danger:hover { background: #ee5253; }
+
+        @media (max-width: 768px) {
+            .wrapper { grid-template-columns: 1fr; padding: 10px; height: auto; overflow: visible; }
+            aside { display: none; }
+            main { height: auto; overflow: visible; }
+            .search-container { width: 100%; }
+            .card-grid { grid-template-columns: repeat(auto-fill, minmax(100%, 1fr)); }
+        }
+    </style>
+</head>
+<body>
+
+<div class="modal" id="settings-modal">
+    <div class="modal-content">
+        <h2 style="margin-top:0;" data-lang="env-title">Environment</h2>
+        
+        <div class="setting-item">
+            <span data-lang="lang-setting">Language</span>
+            <div class="lang-btn-group">
+                <button class="lang-btn" id="lang-ko" onclick="setLanguage('ko')">KO</button>
+                <button class="lang-btn" id="lang-en" onclick="setLanguage('en')">EN</button>
+            </div>
+        </div>
+
+        <div class="setting-item">
+            <span data-lang="dark-mode">Dark Mode</span>
+            <label class="switch">
+                <input type="checkbox" id="dark-mode-toggle" onchange="toggleDarkMode()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <div class="setting-item">
+            <span data-lang="incognito-mode">Incognito Mode (No History)</span>
+            <label class="switch">
+                <input type="checkbox" id="incognito-toggle" onchange="toggleIncognito()">
+                <span class="slider"></span>
+            </label>
+        </div>
+
+        <button class="btn-danger" onclick="clearHistory()" data-lang="clear-hist-btn">Clear Visit History</button>
+
+        <div style="border-top: 1px solid var(--glass-border); padding-top: 20px; margin: 20px 0;">
+            <div style="display:flex; justify-content:space-between; align-items:center; cursor:pointer;" onclick="toggleDevInfo()">
+                <span data-lang="dev-philosophy-title">Development Philosophy</span>
+                <i id="dev-arrow" class="fa-solid fa-chevron-down" style="font-size: 14px; transition: transform 0.3s;"></i>
+            </div>
+            <div id="dev-philosophy" style="display:none; margin-top: 15px; font-size: 13px; color: var(--text-sub); line-height: 1.6; font-style: italic; padding-left: 10px; border-left: 3px solid var(--primary-color);">
+                Developed and operated by sapphire-9<br>
+            </div>
+        </div>
+
+        <button onclick="toggleSettings(false)" style="width:100%; padding:10px; background:var(--primary-color); color:white; border:none; border-radius:8px; cursor:pointer;" data-lang="close-btn">Close</button>
+    </div>
+</div>
+
+<div class="wrapper">
+    <aside class="glass-panel">
+        <div class="brand">
+            <i class="fa-solid fa-layer-group"></i> HW PORTAL
+        </div>
+
+        <nav>
+            <h4 data-lang="nav-fav">Favorites</h4>
+            <ul class="nav-list" id="fav-list"></ul>
+
+            <h4 data-lang="nav-recent">Recent History</h4>
+            <ul class="nav-list" id="history-list"></ul>
+        </nav>
+
+        <div class="system-status">
+            <img src="emblem.png" alt="Emblem" class="status-emblem">
+            <div id="clock" class="clock">00:00:00</div>
+            <div id="date" class="date">Loading...</div>
+        </div>
+    </aside>
+
+    <main>
+        <header class="glass-panel">
+            <div class="search-container">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="search-input" placeholder="Search services...">
+            </div>
+            <div class="header-actions">
+                <button onclick="toggleSettings(true)"><i class="fa-solid fa-gear"></i></button>
+            </div>
+        </header>
+
+        <div class="content-area">
+            <div class="section-title" data-lang="all-services">All Services</div>
+            <div class="card-grid" id="site-grid"></div>
+        </div>
+    </main>
+</div>
+
+<script>
+    // [추가] 언어 팩 정의
+    const langPack = {
+        ko: {
+            "env-title": "환경 설정",
+            "lang-setting": "언어 설정",
+            "dark-mode": "다크 모드",
+            "incognito-mode": "시크릿 모드 (기록 안함)",
+            "clear-hist-btn": "방문 기록 전체 삭제",
+            "dev-philosophy-title": "개발자 정보",
+            "close-btn": "닫기",
+            "nav-fav": "즐겨찾기",
+            "nav-recent": "최근 방문 기록",
+            "all-services": "모든 서비스",
+            "search-placeholder": "서비스 검색...",
+            "incognito-active": "시크릿 모드 활성화 중...",
+            "no-fav": "즐겨찾기가 없습니다.",
+            "no-hist": "방문 기록이 없습니다.",
+            "confirm-clear": "방문 기록을 모두 삭제하시겠습니까?",
+            "clear-alert": "기록이 삭제되었습니다."
+        },
+        en: {
+            "env-title": "Environment",
+            "lang-setting": "Language",
+            "dark-mode": "Dark Mode",
+            "incognito-mode": "Incognito Mode (No History)",
+            "clear-hist-btn": "Clear Visit History",
+            "dev-philosophy-title": "Developer infomation",
+            "close-btn": "Close",
+            "nav-fav": "Favorites",
+            "nav-recent": "Recent History",
+            "all-services": "All Services",
+            "search-placeholder": "Search services...",
+            "incognito-active": "Incognito Mode active...",
+            "no-fav": "No favorites yet.",
+            "no-hist": "No history.",
+            "confirm-clear": "Are you sure you want to clear all visit history?",
+            "clear-alert": "History cleared."
+        }
+    };
+
+    const defaultSites = [
+        { id: 1, name: 'HW chat', url: 'https://chat.hwchat.cloud', desc: 'Rocket Chat Platform' },
+        { id: 2, name: 'HW chat (formal)', url: 'https://chat.hwweb.site', desc: 'Official Communication' },
+        { id: 3, name: 'HW windows', url: 'https://windows.hwchat.cloud', desc: 'Windows 10 Web Sim' },
+        { id: 4, name: 'HW files', url: 'https://file.hwchat.cloud', desc: 'Private Cloud Storage' },
+        { id: 5, name: 'HW files (formal)', url: 'https://file.hwweb.site', desc: 'Official File Server' },
+        { id: 6, name: 'HW files share', url: 'https://share.hwweb.site', desc: 'Admin File Sharing' },
+        { id: 7, name: 'HW IDE', url: 'https://ide.hwchat.cloud', desc: 'online IDE' },
+        { id: 8, name: 'HW info', url: 'https://status.hwchat.cloud', desc: 'Server Status Monitor' },
+        { id: 9, name: 'HW tools', url: 'https://tool.hwchat.cloud', desc: 'Utilities & Tools' },
+    ];
+
+    let sites = JSON.parse(localStorage.getItem('my_sites')) || defaultSites;
+    let favorites = JSON.parse(localStorage.getItem('my_favorites')) || [];
+    let history = JSON.parse(localStorage.getItem('my_history')) || [];
+    let isDarkMode = localStorage.getItem('dark_mode') === 'enabled';
+    let isIncognito = localStorage.getItem('incognito_mode') === 'enabled';
+    
+    // [추가] 현재 언어 상태 (기본값 ko)
+    let currentLang = localStorage.getItem('my_lang') || 'ko';
+
+    // [추가] 언어 변경 함수
+    function setLanguage(lang) {
+        currentLang = lang;
+        localStorage.setItem('my_lang', lang);
+        applyLanguage();
+    }
+
+    // [추가] 언어 적용 함수
+    function applyLanguage() {
+        // 1. 일반 텍스트 변경 (data-lang 속성 기준)
+        document.querySelectorAll('[data-lang]').forEach(el => {
+            const key = el.getAttribute('data-lang');
+            if (langPack[currentLang][key]) {
+                el.textContent = langPack[currentLang][key];
+            }
+        });
+
+        // 2. 버튼 활성화 상태 표시
+        document.getElementById('lang-ko').classList.toggle('active', currentLang === 'ko');
+        document.getElementById('lang-en').classList.toggle('active', currentLang === 'en');
+
+        // 3. 인풋 플레이스홀더 변경
+        const searchInput = document.getElementById('search-input');
+        if (isIncognito) {
+            searchInput.placeholder = langPack[currentLang]['incognito-active'];
+        } else {
+            searchInput.placeholder = langPack[currentLang]['search-placeholder'];
+        }
+
+        // 4. 날짜 포맷팅 업데이트 및 리스트 다시 그리기
+        updateTime();
+        renderLists();
+    }
+
+    function updateTime() {
+        const now = new Date();
+        document.getElementById('clock').textContent = now.toLocaleTimeString('en-US', {hour12:false});
+        
+        // 언어별 날짜 포맷 대응
+        const locale = currentLang === 'ko' ? 'ko-KR' : 'en-US';
+        document.getElementById('date').textContent = now.toLocaleDateString(locale, { 
+            year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
+        });
+    }
+
+    function getIconClass(name) {
+        name = name.toLowerCase();
+        if (name.includes('chat')) return 'fa-solid fa-comments';
+        if (name.includes('windows')) return 'fa-brands fa-windows';
+        if (name.includes('file') || name.includes('share')) return 'fa-solid fa-folder-open';
+        if (name.includes('tool')) return 'fa-solid fa-toolbox';
+        if (name.includes('info') || name.includes('status')) return 'fa-solid fa-chart-line';
+        if (name.includes('hnix')) return 'fa-solid fa-shield-halved';
+        return 'fa-solid fa-globe';
+    }
+
+    function renderSites(filterText = '') {
+        const grid = document.getElementById('site-grid');
+        const filtered = sites.filter(s => 
+            s.name.toLowerCase().includes(filterText) || 
+            s.desc.toLowerCase().includes(filterText)
+        );
+
+        grid.innerHTML = filtered.map(site => {
+            const isFav = favorites.includes(site.id);
+            return `
+                <div class="card" onclick="visitSite(${site.id}, '${site.url}')">
+                    <div class="card-status" title="Online"></div>
+                    <div class="card-icon"><i class="${getIconClass(site.name)}"></i></div>
+                    <div class="card-info">
+                        <div class="card-name">${site.name}</div>
+                        <div class="card-desc">${site.desc}</div>
+                    </div>
+                    <div class="star-action ${isFav ? 'active' : ''}" onclick="toggleFavorite(event, ${site.id})">
+                        <i class="fa-solid fa-star"></i>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function renderLists() {
+        const favUl = document.getElementById('fav-list');
+        const favSites = sites.filter(s => favorites.includes(s.id));
+        favUl.innerHTML = favSites.length ? favSites.map(s => `
+            <li><a href="${s.url}" target="_blank" class="nav-item">
+                <i class="${getIconClass(s.name)}"></i> ${s.name}
+            </a></li>
+        `).join('') : `<li style="padding:10px; color:var(--text-sub); font-size:12px;">${langPack[currentLang]['no-fav']}</li>`;
+
+        const histUl = document.getElementById('history-list');
+        const historySites = history.map(id => sites.find(s => s.id === id)).filter(Boolean);
+        histUl.innerHTML = historySites.length ? historySites.map(s => `
+            <li><a href="${s.url}" target="_blank" class="nav-item" style="opacity:0.8;">
+                <i class="fa-regular fa-clock"></i> ${s.name}
+            </a></li>
+        `).join('') : `<li style="padding:10px; color:var(--text-sub); font-size:12px;">${langPack[currentLang]['no-hist']}</li>`;
+    }
+
+    function visitSite(siteId, url) {
+        if (!isIncognito) {
+            history = history.filter(id => id !== siteId);
+            history.unshift(siteId);
+            if (history.length > 8) history.pop();
+            localStorage.setItem('my_history', JSON.stringify(history));
+            renderLists();
+        }
+        window.open(url, '_blank');
+    }
+
+    function clearHistory() {
+        if(confirm(langPack[currentLang]['confirm-clear'])) {
+            history = [];
+            localStorage.setItem('my_history', JSON.stringify(history));
+            renderLists();
+            alert(langPack[currentLang]['clear-alert']);
+        }
+    }
+
+    function toggleIncognito() {
+        const checkbox = document.getElementById('incognito-toggle');
+        isIncognito = checkbox.checked;
+        localStorage.setItem('incognito_mode', isIncognito ? 'enabled' : 'disabled');
+        applyLanguage(); // 플레이스홀더 업데이트를 위해 호출
+    }
+
+    function toggleFavorite(event, siteId) {
+        event.stopPropagation();
+        const index = favorites.indexOf(siteId);
+        if (index > -1) favorites.splice(index, 1);
+        else favorites.push(siteId);
+        localStorage.setItem('my_favorites', JSON.stringify(favorites));
+        renderSites(document.getElementById('search-input').value.toLowerCase());
+        renderLists();
+    }
+
+    function toggleSettings(show) {
+        document.getElementById('settings-modal').style.display = show ? 'flex' : 'none';
+    }
+
+    function toggleDarkMode() {
+        const checkbox = document.getElementById('dark-mode-toggle');
+        if (checkbox.checked) {
+            document.body.classList.add('dark-mode');
+            localStorage.setItem('dark_mode', 'enabled');
+        } else {
+            document.body.classList.remove('dark-mode');
+            localStorage.setItem('dark_mode', 'disabled');
+        }
+    }
+
+    function toggleDevInfo() {
+        const content = document.getElementById('dev-philosophy');
+        const arrow = document.getElementById('dev-arrow');
+        if (content.style.display === 'none') {
+            content.style.display = 'block';
+            arrow.style.transform = 'rotate(180deg)';
+        } else {
+            content.style.display = 'none';
+            arrow.style.transform = 'rotate(0deg)';
+        }
+    }
+
+    document.getElementById('search-input').addEventListener('keyup', (e) => {
+        renderSites(e.target.value.toLowerCase());
+    });
+
+    function init() {
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            document.getElementById('dark-mode-toggle').checked = true;
+        }
+        if (isIncognito) {
+            document.getElementById('incognito-toggle').checked = true;
+        }
+        
+        // 초기 언어 적용
+        applyLanguage();
+        
+        setInterval(updateTime, 1000);
+        renderSites();
+    }
+
+    init();
+</script>
+</body>
+</html>
